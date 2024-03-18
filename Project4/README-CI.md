@@ -20,6 +20,85 @@ For part 1 of this project, the goals are to...
 ![dockerinstall1](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/c001c720-02a1-47a5-8b0d-4f8822cc4a9e)
 ![dockerinstall2](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/eb440cf9-3075-462a-8c5a-5a0dc267cd3a)
 
+## Part 1: Creating a container image and dockerfile
+
+- Found https://medium.com/nerd-for-tech/deploy-a-custom-nginx-docker-image-and-push-it-to-docker-hub-118f1ab2186b. Seems like a good initial test.
+- Started local ubuntu machine. Made a directory called proj4test to carry out this test.
+- Put the 7z archive with my site files in proj4test.
+- Made new directory /proj4test/containering and ran "sudo docker pull nginx:latest"
+
+Output
+```text
+jacob@lappy:~/proj4test/containering$ sudo docker pull nginx:latest
+[sudo] password for jacob:
+latest: Pulling from library/nginx
+8a1e25ce7c4f: Pull complete
+e78b137be355: Pull complete
+39fc875bd2b2: Pull complete
+035788421403: Pull complete
+87c3fb37cbf2: Pull complete
+c5cdd1ce752d: Pull complete
+33952c599532: Pull complete
+Digest: sha256:6db391d1c0cfb30588ba0bf72ea999404f2764febf0f1f196acd5867ac7efa7e
+Status: Downloaded newer image for nginx:latest
+docker.io/library/nginx:latest
+```
+
+Verfied it worked
+```text
+jacob@lappy:~/proj4test/containering$ sudo docker images
+REPOSITORY    TAG       IMAGE ID       CREATED         SIZE
+nginx         latest    92b11f67642b   4 weeks ago     187MB
+hello-world   latest    d2c94e258dcb   10 months ago   13.3kB
+```
+
+- Unzipped site files using "7z x 4980_testsite.7z"
+- Created testfile which is my dockerfile based on the article.
+
+```text
+jacob@lappy:~/proj4test/containering$ cat testfile
+FROM nginx:1.10.1-alpine
+COPY /home/jacob/proj4test/4980_testsite/ /usr/share/nginx/html
+EXPOSE 8080
+CMD ["nginx", "-g", "daemon off;"]
+```
+
+- Ran "sudo docker build -t testing ."
+- Error, assuming because the file is named testfile not dockerfile, renamed and reran.
+- Another error, more verbose, see below...
+
+```text
+jacob@lappy:~/proj4test/containering$ sudo docker build -t testing .
+[+] Building 11.2s (6/6) FINISHED                                                         docker:default
+ => [internal] load build definition from dockerfile                                                0.0s
+ => => transferring dockerfile: 185B                                                                0.0s
+ => [internal] load metadata for docker.io/library/nginx:1.10.1-alpine                             11.0s
+ => [internal] load .dockerignore                                                                   0.0s
+ => => transferring context: 2B                                                                     0.0s
+ => [internal] load build context                                                                   0.0s
+ => => transferring context: 2B                                                                     0.0s
+ => CANCELED [1/2] FROM docker.io/library/nginx:1.10.1-alpine@sha256:dabd1d182f12e2a7d372338dfd0cd  0.1s
+ => => resolve docker.io/library/nginx:1.10.1-alpine@sha256:dabd1d182f12e2a7d372338dfd0cde303ef042  0.0s
+ => => sha256:dabd1d182f12e2a7d372338dfd0cde303ef042a6ba01cc829ef464982f9c9e2c 1.15kB / 1.15kB      0.0s
+ => => sha256:2cd900f340dd52c646566742cc934f89d595c5eff820c7805b5ebf3be661a533 7.99kB / 7.99kB      0.0s
+ => ERROR [2/2] COPY /home/jacob/proj4test/4980_testsite/index.html /usr/share/nginx/html           0.0s
+------
+ > [2/2] COPY /home/jacob/proj4test/4980_testsite/index.html /usr/share/nginx/html:
+------
+dockerfile:2
+--------------------
+   1 |     FROM nginx:1.10.1-alpine
+   2 | >>> COPY /home/jacob/proj4test/4980_testsite/index.html /usr/share/nginx/html
+   3 |     EXPOSE 8080
+   4 |     CMD ["nginx", "-g", "daemon off;"]
+--------------------
+ERROR: failed to solve: failed to compute cache key: failed to calculate checksum of ref 9ac96ec4-99d0-4e2d-9141-7354d491c986::b227tkktf2d3dhnlsfyyr18wd: failed to walk /var/lib/docker/tmp/buildkit-mount3086396574/home/jacob/proj4test/4980_testsite: lstat /var/lib/docker/tmp/buildkit-mount3086396574/home/jacob/proj4test/4980_testsite: no such file or directory
+
+```
+
+- Permissions issue? Path issue?
+- 
+
 ## Part 1: Resources used
 
 https://docs.docker.com/engine/install/ubuntu/ Site used to install Docker in WSL Ubuntu
@@ -27,4 +106,6 @@ https://docs.docker.com/engine/install/ubuntu/ Site used to install Docker in WS
 https://www.docker.com/resources/what-container/ Site used to define what a container is
 
 https://docs.docker.com/reference/dockerfile/ Site used to define what a Dockerfile is
+
+https://medium.com/nerd-for-tech/deploy-a-custom-nginx-docker-image-and-push-it-to-docker-hub-118f1ab2186b Initial test for building webserver container
 
