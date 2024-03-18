@@ -176,6 +176,70 @@ b16a13fa8164   hello-world   "/hello"                 5 days ago      Exited (0)
 jacob@lappy:~/proj4test$
 ```
 
+- Permissions issue causing the broken site? Tried again but changed dockerfile to...
+
+```text
+FROM nginx:1.10.1-alpine
+COPY 4980_testsite /usr/share/nginx/html
+RUN chown -R www-data:www-data /usr/share/nginx/html/4980_testsite \
+    && chmod -R 750 /usr/share/nginx/html/4980_testsite
+EXPOSE 8080
+CMD ["nginx", "-g", "daemon off;"]
+
+```
+
+- Issue persists after building and testing with that new dockerfile.
+- Testing with this dockerfile
+
+```text
+FROM nginx:1.10.1-alpine
+COPY 4980_testsite /usr/share/nginx/html
+RUN chown -R www-data:www-data /usr/share/nginx/html/4980_testsite \
+    && chmod -R 750 /usr/share/nginx/html/4980_testsite
+RUN rm /etc/nginx/sites-available/default
+RUN echo "server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+
+        root /var/www/html/4980_testsite;
+
+        index index.html index.htm index.nginx-debian.html;
+
+        server_name _;
+
+        location / {
+                # First attempt to serve request as file, then
+                # as directory, then fall back to displaying a 404.
+                try_files $uri $uri/ =404;
+        }
+}
+" > /etc/nginx/sites-available/default
+EXPOSE 8080
+CMD ["nginx", "-g", "daemon off;"]
+```
+
+- Issue persists, links and css still broken. It does still work sorta, as in I can navigate to localhost:8080 and get some html, and the links still go the the files they are just broken.
+- Changed the dockerfile to instead make root the owner of the site files instead of www-data.
+- Issue persists.
+- Changed permission to be 755 instead of 750 for www-data. This is based on the output of the "sudo docker logs testaroo4" command which shows permission denied messages.
+- During troubleshooting it seems that the directory copy was not working as expected, see commands and output...
+
+```text
+jacob@lappy:~/proj4test$ sudo docker run --rm testing ls -l /usr/share/nginx/html/4980_testsite
+ls: /usr/share/nginx/html/4980_testsite: No such file or directory
+jacob@lappy:~/proj4test$ sudo docker run --rm testing ls -l /usr/share/nginx/html/
+total 24
+-rw-r--r--    1 root     root           537 Oct 18  2016 50x.html
+-rw-r--r--    1 root     root           969 Mar 15 11:57 base.html
+-rw-r--r--    1 root     root          1057 Mar 15 12:44 cropped.html
+drwx------    4 root     root          4096 Mar 15 11:55 images
+-rw-r--r--    1 root     root          1006 Mar 15 12:27 index.html
+drwx------    2 root     root          4096 Mar  2 12:42 styles
+```
+
+- Issue persists.
+- **ORDER OF OPERATIONS MATTER**, may be causing these issues due to completely muddling up the order multiple times. Setup the dockerfile, build the image, run the container, test. If issues are happening you need to start FROM THE BEGINNING.
+
 ## Part 1: Resources used
 
 https://docs.docker.com/engine/install/ubuntu/ Site used to install Docker in WSL Ubuntu
