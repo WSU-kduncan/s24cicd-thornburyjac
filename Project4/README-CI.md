@@ -97,7 +97,84 @@ ERROR: failed to solve: failed to compute cache key: failed to calculate checksu
 ```
 
 - Permissions issue? Path issue?
-- 
+- Made some changes. Now I have a directory /home/jacob/proj4test. In that is a dockerfile and the 4980testsite directory that contains all site related files. See below for dockerfile...
+
+```text
+FROM nginx:1.10.1-alpine
+COPY 4980_testsite /usr/share/nginx/html
+EXPOSE 8080
+CMD ["nginx", "-g", "daemon off;"]
+```
+
+- Ran "sudo docker build -t testing ." FROM the /home/jacob/proj4test directory.
+- No errors apparently.
+- Confirmed "testing" existed using "docker images" command.
+
+```text
+jacob@lappy:~/proj4test$ sudo docker images
+REPOSITORY    TAG       IMAGE ID       CREATED         SIZE
+testing       latest    7c5e552a2b39   3 minutes ago   60.9MB
+nginx         latest    92b11f67642b   4 weeks ago     187MB
+hello-world   latest    d2c94e258dcb   10 months ago   13.3kB
+
+```
+
+- Now attempting to build and deploy container using "docker run -d --name <name-container> -p 8080:80 <new_image_name>"
+- So my command should be "sudo docker run -d --name testaroo -p 8080:80 testing" see below...
+
+```text
+
+jacob@lappy:~/proj4test$ sudo docker run -d --name testaroo -p 8080:80 testing
+6ab104047f164a0c387467fa096924092467b3ec45ddbda0c2fe90600f9e1144
+jacob@lappy:~/proj4test$ curl localhost
+curl: (7) Failed to connect to localhost port 80 after 0 ms: Connection refused
+jacob@lappy:~/proj4test$ curl localhost:8080
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4980 prototype site</title>
+    <link rel="stylesheet" href="styles/index-styles.css">
+</head>
+<body>
+    <div class="banner">
+        <h1>Welcome to the 4980 prototype</h1>
+        <p>This is meant to be my working prototype of the website/web application functionality for the 4980 design challenge. I have yet to implement the opencv circle detection and cropping feature.</p>
+    </div>
+    <div class="grid-contain">
+        <a href="base.html" class="button">Click here to view base images</a>
+        <a href="images/baseimage/base.zip" class="button">Click here to download base images</a>
+        <a href="cropped.html" class="button">Click here to view cropped vulnerabilities</a>
+        <a href="images/croppedimage/cropped.zip" class="button">Click here to download cropped vulnerabilities</a>
+    </div>
+</body>
+</html>jacob@lappy:~/proj4test$
+
+```
+
+- So it is working sort of, I can curl localhost:8080 and get the HTML, when I go their using a web browser though it only half works, the CSS and other pages are busted see below...
+
+![workingsorta](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/8eddfcf0-e013-4b26-8a2b-107317770b1e)
+
+- I also checked using "sudo docker ps" to see it running.
+- Stopped the container using "sudo docker stop testaroo"
+
+```text
+jacob@lappy:~/proj4test$ sudo docker stop testaroo
+testaroo
+jacob@lappy:~/proj4test$ sudo docker images
+REPOSITORY    TAG       IMAGE ID       CREATED          SIZE
+testing       latest    7c5e552a2b39   11 minutes ago   60.9MB
+nginx         latest    92b11f67642b   4 weeks ago      187MB
+hello-world   latest    d2c94e258dcb   10 months ago    13.3kB
+jacob@lappy:~/proj4test$ sudo docker ps -a
+CONTAINER ID   IMAGE         COMMAND                  CREATED         STATUS                      PORTS     NAMES
+6ab104047f16   testing       "nginx -g 'daemon of…"   5 minutes ago   Exited (0) 36 seconds ago             testaroo
+b16a13fa8164   hello-world   "/hello"                 5 days ago      Exited (0) 5 days ago                 hardcore_swirles
+7b68b3877a55   hello-world   "/hello"                 6 days ago      Exited (0) 6 days ago                 objective_clarke
+jacob@lappy:~/proj4test$
+```
 
 ## Part 1: Resources used
 
