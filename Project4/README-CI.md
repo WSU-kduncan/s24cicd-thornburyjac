@@ -240,6 +240,17 @@ drwx------    2 root     root          4096 Mar  2 12:42 styles
 - Issue persists.
 - **ORDER OF OPERATIONS MATTER**, may be causing these issues due to completely muddling up the order multiple times. Setup the dockerfile, build the image, run the container, test. If issues are happening you need to start FROM THE BEGINNING.
 
+## Part 1: Frequent commands
+Run this command in the directory with your dockerfile to create your image using the dockerfile: `sudo docker build -t <IMAGE_NAME> .`
+Run this command to build/deploy container: `docker run -d --name <CONTAINER_NAME> -p 8080:80 <IMAGE_NAME>`
+Run this command to view running containers: `sudo docker ps`
+Run this command to view ALL containers running and stopped: `sudo docker ps -a`
+Run this command to stop container that was deployed: `sudo docker stop <CONTAINER_NAME>`
+Run this command to view files in image: `sudo docker run --rm <IMAGE_NAME> ls -l /file/path`
+Run this command to view container logs: `sudo docker logs <CONTAINER_NAME>`
+Run this command to view images: `sudo docker images`
+Run this command to remove images (-f to force): `sudo docker rmi <CONTAINER_NAME>`
+
 ## Part 1: Resources used
 
 https://docs.docker.com/engine/install/ubuntu/ Site used to install Docker in WSL Ubuntu
