@@ -238,7 +238,7 @@ drwx------    2 root     root          4096 Mar  2 12:42 styles
 ```
 
 - Issue persists.
-- **ORDER OF OPERATIONS MATTER**, may be causing these issues due to completely muddling up the order multiple times. Setup the dockerfile, build the image, run the container, test. If issues are happening you need to start FROM THE BEGINNING.
+- **ORDER OF OPERATIONS MATTER**, may be causing these issues due to completely muddling up the order multiple times. Setup the dockerfile, build the image, run the container, test. If issues are happening you need to start FROM THE BEGINNING. Because I have been messing up the order sometimes I cannot be sure what worked/what didnt work as I am not sure what tests I followed the correct order.
 - Remember WORKDIR in the dockerfile, allows you to specify where you want your working directory to be.
 - Remember CMD, different then RUN in the dockerfile, just look up different dockerfile stuff to do.
 - 
