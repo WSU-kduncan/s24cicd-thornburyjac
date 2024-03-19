@@ -265,9 +265,9 @@ drwx------ 4 jacob jacob 4096 Mar  2 08:06 4980_testsite
 -rw-r--r-- 1 jacob jacob  118 Mar 19 14:59 Dockerfile
 ```
 
-- Ran command `sudo docker build -t myimage .`
+- Ran command `sudo docker build -t myimage .`. This command builds the "myimage" image using the Dockerfile in the working directory. The Dockerfile contains commands that basically pull from the base image and make your personal alterations. The product "myimage" will be the base image you pulled from in the Dockerfile (in this case nginx:1.10.1-alpine) plus the alterations you made (in this case, adding my site files to a specific directory, changing ownership and permissions on those files, and exposing port 8080 so it can receive http requests. NOTE exposing the port is not all, the command to deploy the container you need to specify that port again)
 - Successfully created images, confirmed in now appears in the list of images.
-- Ran command `docker run -d --name mycontain -p 8080:80 myimage`
+- Ran command `docker run -d --name mycontain -p 8080:80 myimage`. This command deploys the container "mycontain" using the image I built in the earlier command. That container is serving web content on port 8080.
 - No errors, appears to have started.
 - In my browser on my local machine, went to localhost:8080
 
