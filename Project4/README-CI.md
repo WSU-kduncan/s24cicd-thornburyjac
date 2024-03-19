@@ -323,7 +323,7 @@ Run this command to view container logs: `sudo docker logs <CONTAINER_NAME>`
 
 Run this command to view images: `sudo docker images`
 
-Run this command to remove images (-f to force): `sudo docker rmi <CONTAINER_NAME>`
+Run this command to remove images (-f to force): `sudo docker rmi <IMAGENAME>`
 
 Run this command to burn the mound of dead containers: `sudo docker container prune`
 
