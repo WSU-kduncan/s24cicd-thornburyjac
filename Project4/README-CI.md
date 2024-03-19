@@ -194,7 +194,7 @@ CMD ["nginx", "-g", "daemon off;"]
 ```text
 FROM nginx:1.10.1-alpine
 COPY 4980_testsite /usr/share/nginx/html
-RUN chown -R www-data:www-data /usr/share/nginx/html/4980_testsite \
+RUN chown -R www-data:www-data /usr/share/nginx/html/4980_testsite \sudo docker run --rm myimage ls -l /usr/share/nginx/html
     && chmod -R 750 /usr/share/nginx/html/4980_testsite
 RUN rm /etc/nginx/sites-available/default
 RUN echo "server {
@@ -238,10 +238,71 @@ drwx------    2 root     root          4096 Mar  2 12:42 styles
 ```
 
 - Issue persists.
-- **ORDER OF OPERATIONS MATTER**, may be causing these issues due to completely muddling up the order multiple times. Setup the dockerfile, build the image, run the container, test. If issues are happening you need to start FROM THE BEGINNING. Because I have been messing up the order sometimes I cannot be sure what worked/what didnt work as I am not sure what tests I followed the correct order.
+- **ORDER OF OPERATIONS MATTER**, may be causing these issues due to completely muddling up the order multiple times. Get the base image you want, setup the dockerfile, build your image, deploy/run the container, test. If issues are happening you need to start FROM THE BEGINNING. Because I have been messing up the order sometimes I cannot be sure what worked/what didnt work as I am not sure what tests I followed the correct order.
 - Remember WORKDIR in the dockerfile, allows you to specify where you want your working directory to be.
 - Remember CMD, different then RUN in the dockerfile, just look up different dockerfile stuff to do.
-- 
+- Pending...
+
+## Part 1: Return of the Containers
+
+- After another half hour of testing, this is where we are at...
+
+Dockerfile
+```text
+FROM nginx:1.10.1-alpine
+COPY 4980_testsite /usr/share/nginx/html
+RUN chmod -R 777 /usr/share/nginx/html
+EXPOSE 8080
+```
+
+Environment
+```text
+jacob@lappy:~/proj4test$ pwd
+/home/jacob/proj4test
+jacob@lappy:~/proj4test$ ls -l
+total 8
+drwx------ 4 jacob jacob 4096 Mar  2 08:06 4980_testsite
+-rw-r--r-- 1 jacob jacob  118 Mar 19 14:59 Dockerfile
+```
+
+- Ran command `sudo docker build -t myimage .`
+- Successfully created images, confirmed in now appears in the list of images.
+- Ran command `docker run -d --name mycontain -p 8080:80 myimage`
+- No errors, appears to have started.
+- In my browser on my local machine, went to localhost:8080
+
+![WORKING](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/6aabd952-868b-4131-8065-f54c08967dc0)
+![WORKING2](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/31cb8516-8a7c-418e-9792-52c8b63a9ce7)
+
+- Links and CSS appear to be working. Ran command `sudo docker logs mycontain` and logs appear clean, only http requests.
+- Still, the issue persists where it is not copying the directory, it is copying the directory contents, see below...
+
+```text
+jacob@lappy:~/proj4test$ sudo docker run --rm myimage ls -l /usr/share/nginx/html
+total 32
+-rwxrwxrwx    1 root     root           537 Oct 18  2016 50x.html
+-rwxrwxrwx    1 root     root           969 Mar 15 11:57 base.html
+-rwxrwxrwx    1 root     root          1057 Mar 15 12:44 cropped.html
+drwxrwxrwx    1 root     root          4096 Mar 15 11:55 images
+-rwxrwxrwx    1 root     root          1006 Mar 15 12:27 index.html
+drwxrwxrwx    1 root     root          4096 Mar  2 12:42 styles
+```
+
+- The links and CSS being broken was a permissions issue, I set the permissions to 777 but I think you could get away with 755 or 750, not sure. Basically the CSS and images were in directories and whatever user, I assume www-data, did not have access to those directories.
+- I thought in my previous testing I had fixed that by running chmod and chown commands in my dockerfile, but either I messed it up or did not build a fresh image with the chmod and chown commands added, not sure.
+- Removed my container and image and tried again with a Dockerfile where I tried to change the owner and group to www-data. Error, user does not exist. Checked Dockerhub nginx documentation https://hub.docker.com/_/nginx. Apparently they use the user nginx.
+- Tried again with slight changes to Dockerfile. This time it worked, see below Dockerfile that now makes a little more sense in terms of not giving rwx access to literally everyone.
+
+Last version of Dockerfile that is working well enough, still not sure why its copying 4980_testsite contents and not the directory itself.
+```text
+FROM nginx:1.10.1-alpine
+COPY 4980_testsite /usr/share/nginx/html
+RUN chown -R nginx:nginx /usr/share/nginx/html
+RUN chmod -R 750 /usr/share/nginx/html
+EXPOSE 8080
+```
+
+- Confirmed this worked by navigating to localhost:8080 and making sure the links and CSS was working.
 
 ## Part 1: Frequent commands
 Run this command in the directory with your dockerfile to create your image using the dockerfile: `sudo docker build -t <IMAGE_NAME> .`
@@ -262,6 +323,8 @@ Run this command to view images: `sudo docker images`
 
 Run this command to remove images (-f to force): `sudo docker rmi <CONTAINER_NAME>`
 
+Run this command to burn the mound of dead containers: `sudo docker container prune`
+
 ## Part 1: Resources used
 
 https://docs.docker.com/engine/install/ubuntu/ Site used to install Docker in WSL Ubuntu
@@ -271,4 +334,8 @@ https://www.docker.com/resources/what-container/ Site used to define what a cont
 https://docs.docker.com/reference/dockerfile/ Site used to define what a Dockerfile is
 
 https://medium.com/nerd-for-tech/deploy-a-custom-nginx-docker-image-and-push-it-to-docker-hub-118f1ab2186b Initial test for building webserver container
+
+https://docs.docker.com/reference/dockerfile/ Dockerfile reference material
+
+https://hub.docker.com/_/nginx nginx container image info
 
