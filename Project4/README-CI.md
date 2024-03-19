@@ -273,6 +273,8 @@ drwx------ 4 jacob jacob 4096 Mar  2 08:06 4980_testsite
 
 ![WORKING](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/6aabd952-868b-4131-8065-f54c08967dc0)
 ![WORKING2](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/31cb8516-8a7c-418e-9792-52c8b63a9ce7)
+![WORKING3](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/20d6b41b-cd4a-42ec-ba38-c06d41e991fe)
+I know this last one says exited, thats because at the point of taking this screenshot I had exited that container.
 
 - Links and CSS appear to be working. Ran command `sudo docker logs mycontain` and logs appear clean, only http requests.
 - Still, the issue persists where it is not copying the directory, it is copying the directory contents, see below...
