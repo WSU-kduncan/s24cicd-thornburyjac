@@ -341,3 +341,16 @@ https://docs.docker.com/reference/dockerfile/ Dockerfile reference material
 
 https://hub.docker.com/_/nginx nginx container image info
 
+# Part 2: GitHub Actions and DockerHub
+
+## Part 2: Overview
+
+For part 2 of this project, the goals are to...
+1. Create a free Dockerhub account.
+2. Create a public repo in Dockerhub.
+3. Setup GitHub Secrets per specification.
+4. Setup GitHub Actions workflow per specification.
+
+## Part 2: Process documentation
+
+## Part 2: Resources used
