@@ -445,6 +445,44 @@ jobs:
 ![imageindocker](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/9b7132a4-1c30-40ba-9d4a-a09958b8476e)
 
 ### Part 2: Using Github Actions to push to Dockerhub
+- Going over my workflow, I am not sure how to start it.
+- Per https://docs.docker.com/build/ci/github-actions/ which seems easier to use, I changed my workflow to...
+
+```text
+name: ci
+
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      -
+        name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/sp2024-ceg3120-proj:latest
+```
+
+- All I changed was the last tag to add "sp2024-ceg3120-proj" instead of the provided example text "clockbox"
 
 ## Part 2: Resources used
 
