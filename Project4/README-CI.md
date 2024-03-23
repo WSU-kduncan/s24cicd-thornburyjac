@@ -490,7 +490,12 @@ jobs:
 
 ![image](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/cf0416c6-2f80-44d5-96c9-61373c12a2ba)
 
+- Setup a access token on Dockerhub. See below...
 
+![image](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/87bfe380-f2b1-4c4d-ab48-0c26de01b6ee)
+
+- Updated workflow to look for DOCKERHUB_TOKEN and added the token that was generated from Dockerhub as the value.
+- 
 
 ## Part 2: Resources used
 
