@@ -495,6 +495,8 @@ jobs:
 ![image](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/87bfe380-f2b1-4c4d-ab48-0c26de01b6ee)
 
 - Updated workflow to look for DOCKERHUB_TOKEN and added the token that was generated from Dockerhub as the value.
+- Error: buildx failed with: ERROR: failed to solve: failed to compute cache key: failed to calculate checksum of ref so90zvyp5cmgxwu9j7ib7lwtu::gcog6b755h6oeoqu0mooz3jd3: "/4980_testsite": not found
+- Added 4980_testsite to root directory.
 - 
 
 ## Part 2: Resources used
