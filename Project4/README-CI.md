@@ -483,6 +483,10 @@ jobs:
 ```
 
 - All I changed was the last tag to add "sp2024-ceg3120-proj" instead of the provided example text "clockbox"
+- Renamed and replaced my previous workflow with this.
+- Added Dockerfile to the ./ directory of this repo since that is where the workflow is looking. I probably could have it look in my Dockerfiles folder but for this initial test this is fine.
+- Committed changes to this README to see if it would push the image to Dockerhub.
+- 
 
 ## Part 2: Resources used
 
