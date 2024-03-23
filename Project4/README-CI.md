@@ -353,4 +353,103 @@ For part 2 of this project, the goals are to...
 
 ## Part 2: Process documentation
 
+- Setup free Dockerhub account at https://hub.docker.com/
+
+![dockerhubaccount](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/9e480b52-3196-47d1-9182-621e15df77c6)
+
+- Selected Create a Repository. See below screenshot for details.
+
+ ![pubrepo](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/4a7c39b3-b5cf-4aa2-9e96-c1fc7649419a)
+
+- Link to repo https://hub.docker.com/repository/docker/thornburyjac/sp2024-ceg3120-proj/general
+- Navigated to this repo's settings > secrets and variables > actions > new repo secret. See below...
+
+![githubactions](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/41fad4f6-62aa-4445-b8df-12533e5adfda)
+
+- Set up DOCKER_USERNAME and DOCKER_PASSWORD with their values set accordinlgy. See below...
+
+![secretusername](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/32c80af7-d09c-4c23-a188-4431b8c7687e)
+
+- Navigated to this repo's Actions > Skip this and set up a workflow yourself. See below...
+
+![setupwork](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/de242023-77d2-4ca7-9048-f0f5eef6ddc0)
+
+- This brings us to a new workflow file. From the links I looked at (see resources used section) the file will be a YAML file that specifies the workflow.
+- Copied one of the templates from the links. See below...
+
+```text
+name: proj4workflow
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  push_to_registry:
+    name: Push Docker image to Docker Hub
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: thornburyjac/sp2024-ceg3120-proj
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+```
+
+- In this YAML all I changed was the name, and added my Dockerhub namespace and repo thornburyjac/sp2024-ceg3120-proj where the template has my-docker-hub-namespace/my-docker-hub-repository
+- See below screenshot...
+
+![workflowcompl](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/e182602d-410a-4277-ab6c-400fd103daec)
+
+- Pending push test.
+
+## Part 2: Pushing to Dockerhub with and without Github Actions
+
+### Part 2: Using command line to push to Dockerhub
+- Just pushing from a command line environment should be creating an image, and then running the command `docker push DOCKERHUB-USERNAME/IMAGE-YOU-CREATED`
+- Navigated to the directory where I have my Dockerfile.
+- Ran command `sudo docker build -t proj4image .`
+- Confirmed image created.
+- Attempted command `docker push thornburyjac/proj4image` but received an error. Realized I was attempting to push thornburyjac/proj4image but my image was called just proj4image.
+- Ran command `sudo docker tag proj4image:latest thornburyjac/proj4image:latest` to rename the image and reran push command.
+- Error access denied. Needed to first run `docker login` command to authenticate, then reran push command.
+- See screenshots...
+
+![commmandout](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/b19c28cf-c98f-4a7c-aff1-f9f2373da726)
+![commandout2](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/ae8a4974-7bbc-43db-9b9b-befd19048546)
+
+- Realized I had pushed it to its own repo, instead of the repo I had created.
+- Ran command `docker tag proj4image:latest thornburyjac/sp2024-ceg3120-proj:latest`
+- Ran command `docker push thornburyjac/sp2024-ceg3120-proj:latest`
+- Confirmed it was in the right repo, see below screenshots...
+
+![commmandout3](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/897f61f6-2a6a-436c-9a2e-70b958a65454)
+![imageindocker](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/9b7132a4-1c30-40ba-9d4a-a09958b8476e)
+
+### Part 2: Using Github Actions to push to Dockerhub
+
 ## Part 2: Resources used
+
+https://docs.docker.com/build/ci/github-actions/
+
+https://github.com/marketplace/actions/build-and-push-docker-images
+
+https://docs.github.com/en/actions/publishing-packages/publishing-docker-images#publishing-images-to-docker-hub **This is the YAML file template I used.**
