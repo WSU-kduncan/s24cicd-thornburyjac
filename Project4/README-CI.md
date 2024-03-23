@@ -486,7 +486,11 @@ jobs:
 - Renamed and replaced my previous workflow with this.
 - Added Dockerfile to the ./ directory of this repo since that is where the workflow is looking. I probably could have it look in my Dockerfiles folder but for this initial test this is fine.
 - Committed changes to this README to see if it would push the image to Dockerhub.
-- 
+- Errors regarding authentication, see below...
+
+![image](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/cf0416c6-2f80-44d5-96c9-61373c12a2ba)
+
+
 
 ## Part 2: Resources used
 
