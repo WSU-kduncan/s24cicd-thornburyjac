@@ -496,8 +496,8 @@ jobs:
 
 - Updated workflow to look for DOCKERHUB_TOKEN and added the token that was generated from Dockerhub as the value.
 - Error: buildx failed with: ERROR: failed to solve: failed to compute cache key: failed to calculate checksum of ref so90zvyp5cmgxwu9j7ib7lwtu::gcog6b755h6oeoqu0mooz3jd3: "/4980_testsite": not found
-- Added 4980_testsite to root directory.
-- 
+- Added 4980_testsite to root directory. Since it is a mixture of html, css, images, and zip files, I just added some of the html and css files. To see the full website files, they can be found in the 7z archive in /Project4/Website/
+- Now that that is done the thornburyjac/sp2024-ceg3120-proj repo is updating. Of course the build it is updating to will be broken because the images are not included inthe 4980_testsite folder in the root of this repo.
 
 ## Part 2: Resources used
 
