@@ -1,1 +1,0 @@
-the images are missing from this version of the site because I had to add this 4980_testsite directory after the fact to get the github workflow working. To see the actual site files get the 7z archive from the /Project4/Website
