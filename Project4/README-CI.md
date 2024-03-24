@@ -361,7 +361,7 @@ For part 2 of this project, the goals are to...
 
  ![pubrepo](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/4a7c39b3-b5cf-4aa2-9e96-c1fc7649419a)
 
-- Link to repo https://hub.docker.com/repository/docker/thornburyjac/sp2024-ceg3120-proj/general
+- **Link to repo** https://hub.docker.com/repository/docker/thornburyjac/sp2024-ceg3120-proj/general
 - Navigated to this repo's settings > secrets and variables > actions > new repo secret. See below...
 
 ![githubactions](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/41fad4f6-62aa-4445-b8df-12533e5adfda)
@@ -498,6 +498,58 @@ jobs:
 - Error: buildx failed with: ERROR: failed to solve: failed to compute cache key: failed to calculate checksum of ref so90zvyp5cmgxwu9j7ib7lwtu::gcog6b755h6oeoqu0mooz3jd3: "/4980_testsite": not found
 - Added 4980_testsite to root directory. Since it is a mixture of html, css, images, and zip files, I just added some of the html and css files. To see the full website files, they can be found in the 7z archive in /Project4/Website/
 - Now that that is done the thornburyjac/sp2024-ceg3120-proj repo is updating. Of course the build it is updating to will be broken because the images are not included inthe 4980_testsite folder in the root of this repo.
+- Cloned repo to my WSL Ubuntu system, removed the test 4980_testsite directory, and replaced it with the proper 4980_testsite directory.
+- Pushed changes to github from remote.
+- Now when the automated workflow runs, it will have the correct Dockerfile and the correct 4980_testsite directory.
+
+## Part 2: Workflow behaviour
+
+Currently the workflow is set to...
+```text
+name: ci
+
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      -
+        name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/sp2024-ceg3120-proj:latest
+```
+The breakdown would be...
+
+- Named ci
+- The on > push > branches: "main" lines are self explanatory. The workflow runs when a push/commit happens to the "main" branch.
+- The jobs section is extensive, it lays out that it runs on "ubuntu-latest" and the steps are...
+ - First step called checkout and uses actions/checkout@v4. Per docs.github "This is an action that checks out your repository onto the runner, allowing you to run scripts or other actions against your code (such as build and test tools)."
+ - Second step is "Login to Docker Hub". It uses the docker/login-action@v3 with the secrets configured in the repo. In this instance those secrets are DOCKERHUB_USERNAME and DOCKERHUB_TOKEN
+ - Third step is "Set up Docker Buildx". It uses the docker/setup-buildx-action@v3. Per github.com "This action will create and boot a builder that can be used in the following steps of your workflow if you're using Buildx or the build-push action. By default, the docker-container driver will be used to be able to build multi-platform images and export cache using a BuildKit container."
+ - Fourth step is "Build and push". It uses the docker/build-push-action@v5. Per github.com "GitHub Action to build and push Docker images with Buildx with full support of the features provided by Moby BuildKit builder toolkit. This includes multi-platform build, secrets, remote cache, etc. and different builder deployment/namespacing options."
+ - The fourth step is where it specifies the root directory to look for the Dockerfile and the context of the image build. So that "Context: ." line is why earlier I was getting a failed message when the workflow ran because the 4980_testsite directory did not exist in the root directory. It was trying to build the image with the Dockerfile and the Dockerfile needed that 4980_testsite directory in the context directory to work.
+ - The fourth step also specifies the Dockerhub image tag with the "tags: ${{ secrets.DOCKERHUB_USERNAME }}/sp2024-ceg3120-proj:latest" line.
+ - For someone else to use this workflow in their own repository, they would need to make sure they configured the github secrets correctly. They also would need to change the tags line to match their situation/Dockerhub repo name.
 
 ## Part 2: Resources used
 
@@ -505,4 +557,12 @@ https://docs.docker.com/build/ci/github-actions/
 
 https://github.com/marketplace/actions/build-and-push-docker-images
 
-https://docs.github.com/en/actions/publishing-packages/publishing-docker-images#publishing-images-to-docker-hub **This is the YAML file template I used.**
+https://docs.docker.com/build/ci/github-actions/ *This is the YAML file template I used.*
+
+https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions *Used for understanding github workflow*
+
+https://github.com/docker/setup-buildx-action *Used for understanding github workflow*
+
+https://github.com/docker/build-push-action *Used for understanding github workflow*
+
+https://hub.docker.com/repository/docker/thornburyjac/sp2024-ceg3120-proj/general *Link  to my Dockerhub repo*
