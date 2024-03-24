@@ -550,6 +550,7 @@ The breakdown would be...
  - The fourth step is where it specifies the root directory to look for the Dockerfile and the context of the image build. So that "Context: ." line is why earlier I was getting a failed message when the workflow ran because the 4980_testsite directory did not exist in the root directory. It was trying to build the image with the Dockerfile and the Dockerfile needed that 4980_testsite directory in the context directory to work.
  - The fourth step also specifies the Dockerhub image tag with the "tags: ${{ secrets.DOCKERHUB_USERNAME }}/sp2024-ceg3120-proj:latest" line.
  - For someone else to use this workflow in their own repository, they would need to make sure they configured the github secrets correctly. They also would need to change the tags line to match their situation/Dockerhub repo name.
+ - Important to note that how we have it setup currently, it overwrites the image on Dockerhub everytime the workflow happens. This way we only have one image and it will match the Github. I imagine you could setup the workflow to create new ones each time, but for this project I figured that would make the Dockerhub repo a little cluttered with the amount I commit and push.
 
 ## Part 2: Resources used
 
