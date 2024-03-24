@@ -567,3 +567,15 @@ https://github.com/docker/setup-buildx-action *Used for understanding github wor
 https://github.com/docker/build-push-action *Used for understanding github workflow*
 
 https://hub.docker.com/repository/docker/thornburyjac/sp2024-ceg3120-proj/general *Link  to my Dockerhub repo*
+
+# Part 3: Diagramming
+
+## Part 3: Diagram
+
+![DIAGRAM](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/fa3c27d4-38f6-4f7d-9c91-4c430c8801ab)
+
+## Part 3: Resources used
+
+https://lucid.app/lucidchart/d24f810c-21b8-43a3-ab4a-559094c5d836/edit?beaconFlowId=6B438F837A6ED21E&invitationId=inv_328b2030-4349-496f-a1fd-84ffcd847e1c&page=0_0# *Used to create the diagram*
+
+https://www.google.com/search?client=firefox-b-1-d&sca_esv=57d295de52ae162c&sxsrf=ACQVn0_QNM7p56unJrs1EeyU6Vzpbk3Drg:1711296990312&q=continuous+integration+process&tbm=isch&source=lnms&prmd=ivnsbmtz&sa=X&ved=2ahUKEwjyqNmJpo2FAxXgF2IAHf2iAZoQ0pQJegQIDBAB&biw=1760&bih=859&dpr=1.09#imgrc=Nrg4oZUK1WJPcM *Gave me an idea what continuous integration diagram might look like*
