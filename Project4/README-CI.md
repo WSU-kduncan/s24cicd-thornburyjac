@@ -552,6 +552,8 @@ The breakdown would be...
  - For someone else to use this workflow in their own repository, they would need to make sure they configured the github secrets correctly. They also would need to change the tags line to match their situation/Dockerhub repo name.
  - Important to note that how we have it setup currently, it overwrites the image on Dockerhub everytime the workflow happens. This way we only have one image and it will match the Github. I imagine you could setup the workflow to create new ones each time, but for this project I figured that would make the Dockerhub repo a little cluttered with the amount I commit and push.
 
+**PS: Per class on 3/25, the on > push > branches: "main" lines do not actually mean on a push AND a commit. Since I have been using the browser and editing main that way, my commits are also pushes. I assume if I used command line and a remote repo, my commits wouldn't trigger the workflow but my pushes would?**
+
 ## Part 2: Resources used
 
 https://docs.docker.com/build/ci/github-actions/
