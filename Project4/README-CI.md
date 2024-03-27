@@ -576,7 +576,7 @@ https://hub.docker.com/repository/docker/thornburyjac/sp2024-ceg3120-proj/genera
 
 ## Part 3: Diagram
 
-![DIAGRAM](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/fa3c27d4-38f6-4f7d-9c91-4c430c8801ab)
+![image](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/23a9cd15-408f-417a-b967-c7a477028941)
 
 ## Part 3: Resources used
 
