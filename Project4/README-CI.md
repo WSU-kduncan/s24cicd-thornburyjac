@@ -279,6 +279,8 @@ I know this last one says exited, thats because at the point of taking this scre
 - Links and CSS appear to be working. Ran command `sudo docker logs mycontain` and logs appear clean, only http requests.
 - Still, the issue persists where it is not copying the directory, it is copying the directory contents, see below...
 
+**PS The issue where I thought it was not copying correctly is how it is supposed to work. The COPY line will copy the contents of a directory to the location you specify, not the directory itself just the stuff in it**
+
 ```text
 jacob@lappy:~/proj4test$ sudo docker run --rm myimage ls -l /usr/share/nginx/html
 total 32
