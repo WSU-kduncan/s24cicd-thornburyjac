@@ -91,6 +91,7 @@ jobs:
 ![workflowworkingmaybe](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/5ef535da-d46e-4ad5-a0f8-47460f2b16ab)
 
 - Committed again to test, it looks the same, need to tweak the workflow.
+- test
 
 
 
