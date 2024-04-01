@@ -1,7 +1,7 @@
 # Part 1: Semantic Versioning
 
 ## Part 1: Overview
-Currently, our Github workflow is pushing an image to Dockerhub, but it is not tracking the different versions it is just overwriting whats already been pushed. That means whenever we push to Dockerhub there will only ever be the "latest"
+Currently, our Github workflow is pushing an image to Dockerhub, but it is not tracking the different versions it is just overwriting whats already been pushed. That means whenever we push to Dockerhub there will only ever be the "latest" image. This part of the project is where we implement processes to make sure we track the version number. This way we see the different versions that have been pushed. For example, we would have a version 1.0, and version 1.1, a verison 1.3, etc. We can research popular version numbering methods and maybe use those. Based on the resources provided, we will be using Github actions and metadata to accomplish this.
 
 ## Part 1: Process documentation
 - Used provided resources to familiarize myself with semantic versioning, and how to implement tagging with github workflows.
