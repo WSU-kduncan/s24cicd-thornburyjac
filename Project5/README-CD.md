@@ -91,8 +91,62 @@ jobs:
 ![workflowworkingmaybe](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/5ef535da-d46e-4ad5-a0f8-47460f2b16ab)
 
 - Committed again to test, it looks the same, need to tweak the workflow.
-- test
 
+Tweaked workflow
+```text
+name: ci
+
+on:
+  push:
+    branches:
+      - "main"
+    tags:
+      - "v*.*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+       name: Docker meta
+       id: meta
+       uses: docker/metadata-action@v5
+       with:
+         images: |
+           ${{ secrets.DOCKERHUB_USERNAME }}/sp2024-ceg3120-proj
+         tags: |
+           type=ref,event=branch
+           type=ref,event=pr
+           type=semver,pattern={{version}}
+           type=semver,pattern={{major}}.{{minor}}
+           type=semver,pattern={{major}}
+           type=sha     
+      -
+       name: Login to Docker Hub
+       uses: docker/login-action@v3
+       with:
+         username: ${{ secrets.DOCKERHUB_USERNAME }}
+         password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
+       name: Set up Docker Buildx
+       uses: docker/setup-buildx-action@v3
+      -
+       name: Build and push
+       uses: docker/build-push-action@v5
+       with:
+         context: .
+         file: ./Dockerfile
+         push: true
+         tags: ${{ steps.meta.outputs.tags }}
+         labels: ${{ steps.meta.outputs.labels }}
+```
+
+- When commits happen here is how it looks...
+
+![workflowworkingmore](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/ba471ada-7147-4270-844b-373271b41f95)
 
 
 ## Part 1: Resources used
