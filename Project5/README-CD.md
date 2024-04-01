@@ -150,6 +150,7 @@ jobs:
 
 - So now we are getting multiple versions with the old versions remaining, but the new versions are showing up as hash values? and Main keeps getting overwritten? Further tweaking required.
 - Removed `type=sha` line from the workflow in the `name: Docker meta` section.
+- test
 
 ## Part 1: Resources used
 
