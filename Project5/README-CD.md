@@ -148,6 +148,7 @@ jobs:
 
 ![workflowworkingmore](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/ba471ada-7147-4270-844b-373271b41f95)
 
+- So now we are getting multiple versions with the old versions remaining, but the new versions are showing up as hash values? and Main keeps getting overwritten? Further tweaking required.
 
 ## Part 1: Resources used
 
