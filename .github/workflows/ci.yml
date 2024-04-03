@@ -15,13 +15,13 @@ jobs:
         name: Checkout
         uses: actions/checkout@v4
       -
-       name: Docker meta
-       id: meta
-       uses: docker/metadata-action@v5
-       with:
-         images: |
+        name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
            ${{ secrets.DOCKERHUB_USERNAME }}/sp2024-ceg3120-proj
-         tags: |
+          tags: |
             type=ref,event=branch
             type=ref,event=pr
             type=semver,pattern={{version}}
