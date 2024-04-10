@@ -293,3 +293,34 @@ https://docs.docker.com/build/ci/github-actions/manage-tags-labels/ *used to fig
 https://github.com/docker/metadata-action *used to figure out how to implement the tagging*
 
 https://hub.docker.com/repository/docker/thornburyjac/sp2024-ceg3120-proj/general *link to dockerhub repo*
+
+# Part 2: Deployment
+
+## Part 2: Overview
+For this part of the project, we will be installing Docker on an AWS instance, and configuring that instance to run a container, stop the "old" container, remove the old container, pull the "new" image from Dockerhub, and start a new container using the new image. All this should be done using a script, a Github workflow, and an open source "webhook" that will listen for the new image from Dockerhub. This way the configuration and maintenance of the service is largely automated.
+
+## Part 2: Process documentation
+- The instance I will use is the one we created at the start of the semester.
+
+AWS instance
+![image](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/ad5d62a5-ae70-4b6f-a158-467c39449a55)
+
+- Installed Docker.
+
+Docker installed successfully and hello-world container was run
+![image](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/2e7701b3-6bdb-41c3-9181-8467611093ba)
+
+- Ran command `sudo apt-get install webhook`
+
+Webhook installed
+![image](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/6eeac5db-ae2c-4a14-9e77-be621484a80d)
+
+![image](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/fd47bb84-2fd3-4169-810b-e4e34a49bf0c)
+
+
+## Part 2: Resources used
+
+https://docs.docker.com/engine/install/ubuntu/ *used to install Docker on the Ubuntu AWS instance*
+
+
+
