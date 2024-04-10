@@ -317,6 +317,18 @@ Webhook installed
 
 ![image](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/fd47bb84-2fd3-4169-810b-e4e34a49bf0c)
 
+- Created initial script, will need to test to confirm functionality.
+
+Test script
+```text
+#! /bin/bash
+sudo docker stop <CONTAINERNAME>
+sudo docker remove <CONTAINERNAME>
+sudo docker pull <USERNAME/REPO:TAG>
+sudo docker run -d -p 8080:80 --name <CONTAINER_NAME> --restart always <IMAGE_NAME>
+```
+
+
 
 ## Part 2: Resources used
 
