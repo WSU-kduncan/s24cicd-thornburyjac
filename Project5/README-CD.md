@@ -328,7 +328,20 @@ sudo docker pull <USERNAME/REPO:TAG>
 sudo docker run -d -p 8080:80 --name <CONTAINER_NAME> --restart always <IMAGE_NAME>
 ```
 
+- Manually pulled latest image from Dockerhub.
+- Manually ran container from image I just pulled
+- Ran this script...
 
+```text
+#! /bin/bash
+sudo docker stop testscript
+sudo docker remove testscript
+sudo docker pull thornburyjac/sp2024-ceg3120-proj:latest
+sudo docker run -d -p 8080:80 --name testscript --restart always thornburyjac/sp2024-ceg3120-proj:latest
+```
+Script breakdown: The first line stops the currently running container. The second line removes that stopped container. The third line pulls the latest image from Dockerhub. The fourth line starts the new container using the new image that was just pulled. It is set to run in detached mode which means the terminal will not be held up. The port 8080:80 is specified meaning the host is listening on port 8080 for requests, and those requests will be sent to port 80 on the container. The --restart always option means the container will automatically restart if it stops for any reason, unless it was explicitly stopped by the user. 
+
+- Appears to work, seems to stop old container and start a new one.
 
 ## Part 2: Resources used
 
