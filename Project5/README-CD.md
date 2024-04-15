@@ -297,7 +297,7 @@ https://hub.docker.com/repository/docker/thornburyjac/sp2024-ceg3120-proj/genera
 # Part 2: Deployment
 
 ## Part 2: Overview
-For this part of the project, we will be installing Docker on an AWS instance, and configuring that instance to run a container, stop the "old" container, remove the old container, pull the "new" image from Dockerhub, and start a new container using the new image. All this should be done using a script, a Github workflow, and an open source "webhook" that will listen for the new image from Dockerhub. This way the configuration and maintenance of the service is largely automated.
+For this part of the project, we will be installing Docker on an AWS instance, and configuring that instance to run a container, stop the "old" container, remove the old container, pull the "new" image from Dockerhub, and start a new container using the new image. All this should be done using a script, a Github workflow, and an open source "webhook" that will listen for a message that will prompt the script to run. This message will come from Github ideally, after a workflow run.
 
 ## Part 2: Process documentation
 - The instance I will use is the one we created at the start of the semester.
@@ -305,7 +305,7 @@ For this part of the project, we will be installing Docker on an AWS instance, a
 AWS instance
 ![image](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/ad5d62a5-ae70-4b6f-a158-467c39449a55)
 
-- Installed Docker.
+- Installed Docker using https://docs.docker.com/engine/install/ubuntu/ which walks through all the commands you need to run to get it working.
 
 Docker installed successfully and hello-world container was run
 ![image](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/2e7701b3-6bdb-41c3-9181-8467611093ba)
@@ -342,7 +342,7 @@ sudo docker run -d -p 8080:80 --name testscript --restart always thornburyjac/sp
 Script breakdown: The first line stops the currently running container. The second line removes that stopped container. The third line pulls the latest image from Dockerhub. The fourth line starts the new container using the new image that was just pulled. It is set to run in detached mode which means the terminal will not be held up. The port 8080:80 is specified meaning the host is listening on port 8080 for requests, and those requests will be sent to port 80 on the container. The --restart always option means the container will automatically restart if it stops for any reason, unless it was explicitly stopped by the user. 
 
 - Appears to work, seems to stop old container and start a new one.
-- Created this script file on my instance.
+- Created this script file on my instance in /home/ubuntu/script.
 - Created /etc/webhook.conf, this way the webhook.service can start since it has this file, and the contents of the file are the hooks the service will use.
 
 webhook.conf contents...
@@ -373,22 +373,22 @@ ExecStart=/usr/bin/webhook -nopanic -hooks /etc/webhook.conf -verbose
 WantedBy=multi-user.target
 ```
 
-- Now we need to setup an automatic process, ideally using our github workflow, to trigger the hook to run the script when we push a fresh image to Dockerhub. While webhook.service is running, we need to send a HTTP get or post request to http://34.199.215.59:9000/hooks/redeploy-webhook
+- Now we need to setup an automatic process, ideally using our github workflow run, to trigger the hook to run the script when we push a fresh image to Dockerhub. While webhook.service is running, we need to send a HTTP get or post request to http://34.199.215.59:9000/hooks/redeploy-webhook
 - Added the below webhook to github...
 
 ![githubwebhook](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/307ddedd-ffea-42ff-97e1-97a31fadb817)
 ![githubwebhook2](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/5f068259-f107-47dc-b48d-72b61a2b8dff)
+Basically this means when our workflow run is complete, Github will hit that link we provided in the first screenshot.
 
-- Now github knows about our hooks link, the secret "redeploy", and the action we want it to happen on which is workflow runs.
+- Now github knows about our hooks link, the secret "redeploy" (I dont think this is necessary), and the action we want it to happen on which is workflow runs.
 - Checked "demo-Lab1SecurityGroup", it seems to allow all traffic all ports.
 - Ran `sudo systemctl restart webhook.service`
 - Error: The unit file, source configuration file or drop-ins of webhook.service changed on disk. Run 'systemctl daemon-reload' to reload units.
 - Ran `sudo systemctl daemon-reload`
 - Checked webhook.service status, seems to be running, starting first test.
-- Ran through this process...
+- Ran through this process (on the instance I have a cloned repo)...
 
 ```text
-
 jacob@lappy:~/s24cicd-thornburyjac$ vim Dockerfile
 jacob@lappy:~/s24cicd-thornburyjac$ git add .
 jacob@lappy:~/s24cicd-thornburyjac$ git tag
@@ -429,9 +429,6 @@ To github.com:WSU-kduncan/s24cicd-thornburyjac.git
 
 - I believe that means its working, I ran through the process and after the workflow ran I checked my instance and see a container that started 25 seconds after I ran through the process and whatnot.
 - Need to create the video showing this working, but I think were good.
-
-TODO you need to make sure port 9000 is open on this instance because that is the port to be used for the webhook deal
-TODO added redeploy to github secrets?
 
 ## Part 2: Resources used
 
