@@ -1,1 +1,1 @@
-t
+This folder contains the file "script" which is the script to stop the container, remove the container, pull the new image, and run the container using a new image. It also contains the file "webhook.conf" which contains my hook used by adnanhs webhook.
