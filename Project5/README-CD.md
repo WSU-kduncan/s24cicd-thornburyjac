@@ -342,6 +342,39 @@ sudo docker run -d -p 8080:80 --name testscript --restart always thornburyjac/sp
 Script breakdown: The first line stops the currently running container. The second line removes that stopped container. The third line pulls the latest image from Dockerhub. The fourth line starts the new container using the new image that was just pulled. It is set to run in detached mode which means the terminal will not be held up. The port 8080:80 is specified meaning the host is listening on port 8080 for requests, and those requests will be sent to port 80 on the container. The --restart always option means the container will automatically restart if it stops for any reason, unless it was explicitly stopped by the user. 
 
 - Appears to work, seems to stop old container and start a new one.
+- Created this script file on my instance.
+- Created /etc/webhook.conf, this way the webhook.service can start since it has this file, and the contents of the file are the hooks the service will use.
+
+webhook.conf contents...
+```text
+[
+  {
+    "id": "redeploy-webhook",
+    "execute-command": "/home/ubuntu/script"
+  }
+]
+```
+This is essentially the "hook" our webhook.service will use. It is named "redeploy-webhook" and it executes the command "/home/ubuntu/script" which will run the script we have created.
+
+- webhook service still stopped, leaving it stopped for now until I am ready to test.
+- Altered systemd service file for webhook to ensure when this instance reboots our webhook service still works...
+
+/lib/systemd/system/webhook.service contents
+```text
+[Unit]
+Description=Small server for creating HTTP endpoints (hooks)
+Documentation=https://github.com/adnanh/webhook/
+ConditionPathExists=/etc/webhook.conf
+
+[Service]
+ExecStart=/usr/bin/webhook -nopanic -hooks /etc/webhook.conf -verbose
+
+[Install]
+WantedBy=multi-user.target
+```
+
+- Now we need to setup an automatic process, ideally using our github workflow, to trigger the hook to run the script when we push a fresh image to Dockerhub. While webhook.service is running, we need to send a HTTP get or post request to http://34.199.215.59:9000/hooks/redeploy-webhook
+- TODO you need to make sure port 9000 is open on this instance because that is the port to be used for the webhook deal
 
 ## Part 2: Resources used
 
