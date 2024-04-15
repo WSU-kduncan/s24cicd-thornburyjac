@@ -374,7 +374,64 @@ WantedBy=multi-user.target
 ```
 
 - Now we need to setup an automatic process, ideally using our github workflow, to trigger the hook to run the script when we push a fresh image to Dockerhub. While webhook.service is running, we need to send a HTTP get or post request to http://34.199.215.59:9000/hooks/redeploy-webhook
-- TODO you need to make sure port 9000 is open on this instance because that is the port to be used for the webhook deal
+- Added the below webhook to github...
+
+![githubwebhook](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/307ddedd-ffea-42ff-97e1-97a31fadb817)
+![githubwebhook2](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/5f068259-f107-47dc-b48d-72b61a2b8dff)
+
+- Now github knows about our hooks link, the secret "redeploy", and the action we want it to happen on which is workflow runs.
+- Checked "demo-Lab1SecurityGroup", it seems to allow all traffic all ports.
+- Ran `sudo systemctl restart webhook.service`
+- Error: The unit file, source configuration file or drop-ins of webhook.service changed on disk. Run 'systemctl daemon-reload' to reload units.
+- Ran `sudo systemctl daemon-reload`
+- Checked webhook.service status, seems to be running, starting first test.
+- Ran through this process...
+
+```text
+
+jacob@lappy:~/s24cicd-thornburyjac$ vim Dockerfile
+jacob@lappy:~/s24cicd-thornburyjac$ git add .
+jacob@lappy:~/s24cicd-thornburyjac$ git tag
+v1.0
+v1.0.0
+v1.1
+v1.1.0
+v1.2
+v1.3
+v1.4
+v1.5
+v1.5.0
+v1.6.0
+v1.7.0
+v2.0.0
+v3.0.0
+jacob@lappy:~/s24cicd-thornburyjac$ git tag v3.1.0 -m "testing"
+jacob@lappy:~/s24cicd-thornburyjac$ git commit -m "testing version control"
+[main 9a8158c] testing version control
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+jacob@lappy:~/s24cicd-thornburyjac$ git push origin ^C
+jacob@lappy:~/s24cicd-thornburyjac$ git push origin v3.1.0
+Enumerating objects: 6, done.
+Counting objects: 100% (6/6), done.
+Delta compression using up to 16 threads
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (4/4), 440 bytes | 440.00 KiB/s, done.
+Total 4 (delta 2), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To github.com:WSU-kduncan/s24cicd-thornburyjac.git
+ * [new tag]         v3.1.0 -> v3.1.0
+```
+
+- Confirmed workflow ran.
+- Checked instance, see below screenshot...
+
+![workedmaybe](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/7987e33d-29d4-4f97-8a1d-42f7c9e4c667)
+
+- I believe that means its working, I ran through the process and after the workflow ran I checked my instance and see a container that started 25 seconds after I ran through the process and whatnot.
+- Need to create the video showing this working, but I think were good.
+
+TODO you need to make sure port 9000 is open on this instance because that is the port to be used for the webhook deal
+TODO added redeploy to github secrets?
 
 ## Part 2: Resources used
 
