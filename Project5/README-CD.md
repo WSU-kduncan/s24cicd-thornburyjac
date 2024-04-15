@@ -448,6 +448,7 @@ I think the diagram well explains the process, but to sum it up here...
 2. The workflow in Github is what will push the current version to Dockerhub when a push with a tag happens, that tag is used to track versioning using semantic versioning.
 3. When the workflow finishes and the new version is in Dockerhub, we have a webhook configured in Github to send a message to the EC2 webhook.
 4. The EC2 webhook receives the message, which triggers the script to run and stop the current container, and start a new container with the fresh image pulled from Dockerhub
+5. This means that when a new version is created and pushed to Dockerhub, the container running the service on the EC2 instance is not down for much time at all since it stops the container, removes it, pulls the new image, creates the new container from the new image, and runs it.
 
 ## Part 3: Resources used
 
