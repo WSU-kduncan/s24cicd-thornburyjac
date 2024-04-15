@@ -297,7 +297,7 @@ https://hub.docker.com/repository/docker/thornburyjac/sp2024-ceg3120-proj/genera
 # Part 2: Deployment
 
 ## Part 2: Overview
-For this part of the project, we will be installing Docker on an AWS instance, and configuring that instance to run a container, stop the "old" container, remove the old container, pull the "new" image from Dockerhub, and start a new container using the new image. All this should be done using a script, a Github workflow, and an open source "webhook" that will listen for a message that will prompt the script to run. This message will come from Github ideally, after a workflow run.
+For this part of the project, we will be installing Docker on an AWS instance, and configuring that instance to run a container, stop the "old" container, remove the old container, pull the "new" image from Dockerhub, and start a new container using the new image. All this should be done using a script, a Github workflow, and an open source "webhook" that will listen for a message that will prompt the script to run, and a webhook set up on Github that will send the message. This message will come from Github ideally, after a workflow run.
 
 ## Part 2: Process documentation
 - The instance I will use is the one we created at the start of the semester.
