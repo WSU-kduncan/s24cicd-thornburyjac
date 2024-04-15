@@ -343,6 +343,7 @@ Script breakdown: The first line stops the currently running container. The seco
 
 - Appears to work, seems to stop old container and start a new one.
 - Created this script file on my instance in /home/ubuntu/script.
+- Ideally, if I wanted others to be able to use this script I would either run `sudo chmod 755 /home/ubuntu/script` which would make it executable by everyone OR put it in /usr/local/bin which is a location PATH knows to look for stuff like that. If I put it there I would probably rename it to something more descriptive than "script".
 - Created /etc/webhook.conf, this way the webhook.service can start since it has this file, and the contents of the file are the hooks the service will use.
 
 webhook.conf contents...
@@ -372,6 +373,7 @@ ExecStart=/usr/bin/webhook -nopanic -hooks /etc/webhook.conf -verbose
 [Install]
 WantedBy=multi-user.target
 ```
+So this is the file for the webhook.service. While I am not very familiar with how to configure these, you can see that there is a condition that webhook.conf exists, and that if that condition is met the service starts running this command `/usr/bin/webhook -nopanic -hooks /etc/webhook.conf -verbose`. That command uses the /usr/bin/webhook program with the options -nopanic and -verbose and is provided the path to the hook(s) to use which is the /etc/webhook.conf file I created. Alternatively I could create my own hooks file, and point this file to it by altering the condition line to ConditionPathExists=/path/to/hooks/file and command `/usr/bin/webhook -nopanic -hooks /path/to/hooks/file -verbose`. If you wanted to do this manually, you could just run the command `webhook -nopanic -hooks /etc/webhook.conf -verbose` as long as webhook was configured correctly.
 
 - Now we need to setup an automatic process, ideally using our github workflow run, to trigger the hook to run the script when we push a fresh image to Dockerhub. While webhook.service is running, we need to send a HTTP get or post request to http://34.199.215.59:9000/hooks/redeploy-webhook
 - Added the below webhook to github...
