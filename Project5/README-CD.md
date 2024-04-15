@@ -343,7 +343,7 @@ Script breakdown: The first line stops the currently running container. The seco
 
 - Appears to work, seems to stop old container and start a new one.
 - Created this script file on my instance in /home/ubuntu/script.
-- Ideally, if I wanted others to be able to use this script I would either run `sudo chmod 755 /home/ubuntu/script` which would make it executable by everyone OR put it in /usr/local/bin which is a location PATH knows to look for stuff like that. If I put it there I would probably rename it to something more descriptive than "script".
+- Ideally, if I wanted others to be able to use this script I would either run `sudo chmod 755 /home/ubuntu/script` which would make it executable by everyone OR put it in /usr/local/bin which is a location PATH knows to look for stuff like that and alter the permissions. If I put it there I would probably rename it to something more descriptive than "script".
 - Created /etc/webhook.conf, this way the webhook.service can start since it has this file, and the contents of the file are the hooks the service will use.
 
 webhook.conf contents...
