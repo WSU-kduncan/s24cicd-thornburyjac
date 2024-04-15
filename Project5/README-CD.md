@@ -438,3 +438,17 @@ https://docs.docker.com/engine/install/ubuntu/ *used to install Docker on the Ub
 
 https://github.com/pattonsgirl/CEG3120/blob/main/CourseNotes/webhook.md *used to install webhook on AWS instance*
 
+# Part 3: Diagram
+
+## Part 3: Diagramming
+
+![Project5Diagram](https://github.com/WSU-kduncan/s24cicd-thornburyjac/assets/111811243/fbff7a11-35a2-4e41-bde2-aa88c05e07a9)
+I think the diagram well explains the process, but to sum it up here...
+1. You have a cycle of development where code exists, is changed, is pushed, etc.
+2. The workflow in Github is what will push the current version to Dockerhub when a push with a tag happens, that tag is used to track versioning using semantic versioning.
+3. When the workflow finishes and the new version is in Dockerhub, we have a webhook configured in Github to send a message to the EC2 webhook.
+4. The EC2 webhook receives the message, which triggers the script to run and stop the current container, and start a new container with the fresh image pulled from Dockerhub
+
+## Part 3: Resources used
+
+https://lucid.app/documents *used to create the diagram*
