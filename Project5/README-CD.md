@@ -423,6 +423,21 @@ remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
 To github.com:WSU-kduncan/s24cicd-thornburyjac.git
  * [new tag]         v3.1.0 -> v3.1.0
 ```
+**P.S. IMPORTANT NOTE ABOUT THIS PROCESS** In my video my process is slightly altered to be
+```text
+vim 4980_testsite/index.html and make change
+
+git add 4980_testsite/index.html
+
+git commit -m "testing version control"
+
+git push
+
+git tag v5.3.0 -m "testing"
+
+git push origin v5.3.0
+```
+This is because how I was doing it before, I was not pushing the changes I made, so when I pushed the tag info, the image build sent to Dockerhub would not reflect any changes I had made. So now, I make a change, I track that change, I commit that change, I push that change (so Github reflects the change now), I make the tag info, and I push the tag info (which will trigger a workflow run that will succeed provided the tag format is good).
 
 - Confirmed workflow ran.
 - Checked instance, see below screenshot...
